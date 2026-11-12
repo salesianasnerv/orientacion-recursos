@@ -3,18 +3,18 @@
 // 2) Implementar > Nueva implementación > Aplicación web · Ejecutar como: Yo · Acceso: Cualquier usuario.
 // 3) Copia la URL que termina en /exec y pégala en index.html (API_URL).
 // Cada partida tiene un código de 4 cifras, así varias clases pueden jugar a la vez.
-const CLAVE = 'orientacion';
+const CLAVE = 'cambia-esta-clave'; // la clave real solo en Apps Script
 const CADUCA_MS = 12 * 3600 * 1000; // las partidas se borran a las 12 h
 
 function doGet(e) { return out(read(String((e && e.parameter && e.parameter.c) || ''))); }
 
 function doPost(e) {
   const d = JSON.parse(e.postData.contents);
+  if (d.action === 'get') return out(read(String(d.code || ''))); // lectura: sin cola
   const lock = LockService.getScriptLock(); lock.waitLock(10000);
   try {
     const p = PropertiesService.getScriptProperties();
     let c = String(d.code || '');
-    if (d.action === 'get') return out(read(c));
     if (d.action === 'config') {
       if (d.key !== CLAVE) return out({ error: 'clave' });
       if (!c) { // partida nueva: limpiar antiguas y crear código
