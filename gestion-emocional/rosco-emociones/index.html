@@ -112,6 +112,31 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 .codeBox{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 .codeBig{font-size:clamp(3rem,10vw,5.5rem);font-weight:800;color:var(--njo);letter-spacing:.12em;line-height:1}
 .lvCode{font-weight:800;color:var(--njo)}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+.mode{display:grid;gap:6px;text-align:left;border-radius:16px;padding:16px;font-size:1.05rem}
+.mode small{font-weight:400;opacity:.92;font-size:.88rem;line-height:1.35}
+.mode:nth-child(2){background:var(--vdo)}.mode:nth-child(3){background:var(--nj)}
+.sheet{background:#fff;border-radius:12px;padding:24px 28px;max-width:820px;margin:0 auto 16px;box-shadow:0 3px 14px rgba(31,106,133,.08)}
+.sheet h2{margin:0 0 4px}
+.sheet .line{border-bottom:1.5px dotted #9fb3bc;min-width:180px;display:inline-block}
+.ptab{width:100%;border-collapse:collapse;font-size:.88rem}
+.ptab td,.ptab th{border:1px solid #cfdde3;padding:5px 7px;vertical-align:top;text-align:left}
+.ptab th{background:#eaf4f8;color:var(--azo)}
+.ptab .lt{font-weight:800;color:var(--azo);width:2.2em;text-align:center}
+.ptab .ans{width:28%}
+.phead{display:flex;gap:18px;align-items:center;margin-bottom:10px}
+@media print{
+  @page{size:A4;margin:11mm}
+  header,.stripe,.noprint{display:none!important}
+  body{background:#fff}
+  main{padding:0;max-width:none}
+  .sheet{box-shadow:none;border-radius:0;padding:0;max-width:none;margin:0;break-after:page}
+  .sheet:last-child{break-after:auto}
+  .ptab tr{break-inside:avoid}
+  .ptab{font-size:8.4pt}.ptab td,.ptab th{padding:2.5px 5px;line-height:1.25}
+  .sheet p{margin:3px 0}.sheet h2{font-size:15pt}.phead svg{width:150px;height:150px}.phead{margin-bottom:6px}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 .rs{display:grid;grid-template-columns:24px 1fr auto;gap:6px;align-items:center;padding:7px 4px;border-top:1px solid var(--line);font-size:.92rem}
 .rs.me{background:#fff4ec;border-radius:8px}
 .rs .p{font-weight:800;color:var(--mut);text-align:center}
@@ -150,7 +175,7 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 
 <main>
 <section id="vNoApi" class="narrow hidden"><div class="card"><h2>Falta conectar el juego</h2><p class="intro">Pega la URL de la aplicación web de Apps Script en la constante <b>API_URL</b> de este archivo (línea marcada «PEGA AQUÍ»).</p></div></section>
-<section id="vMsg" class="narrow hidden"><div class="card" style="text-align:center"><div class="big" id="msgT">Cargando…</div><p class="intro" id="msgP"></p><div id="msgX"></div></div></section>
+<section id="vMsg" class="narrow hidden"><div class="card" style="text-align:center"><div class="big" id="msgT">Cargando…</div><p class="intro" id="msgP"></p><div id="msgX"></div><button class="gh stuNew hidden" id="msgNew" style="margin-top:12px">Salir y entrar con otro código</button></div></section>
 
 <section id="vCover" class="narrow hidden">
   <div class="card cover">
@@ -171,7 +196,15 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
       <div class="row" style="justify-content:center"><input id="codeIn" inputmode="numeric" maxlength="4" placeholder="Código" aria-label="Código de sala" style="font-size:1.8rem;width:170px;text-align:center;letter-spacing:.2em;font-weight:800"><button class="nj" id="bEnter" style="font-size:1.2rem">Entrar</button></div>
       <div class="err" id="codeErr" style="text-align:center"></div>
     </div>
-    <div id="coverProfe" class="hidden row" style="justify-content:center;margin-top:16px"><button class="gh" id="bResume" style="display:none">Volver a la partida en curso</button><button class="nj" id="bPrep">Preparar la partida</button></div>
+    <div id="coverProfe" class="hidden" style="margin-top:18px">
+      <h3 style="margin-top:0">¿Cómo vais a jugar?</h3>
+      <div class="modes">
+        <button class="mode" id="bPrep"><span>📱 Con iPads, por equipos</span><small>Cada equipo juega en su iPad y el ranking se ve en directo en la pizarra.</small></button>
+        <button class="mode" id="bBoard"><span>🖥️ En la pizarra, toda la clase</span><small>Sin dispositivos: la clase responde en voz alta y tú marcas los aciertos.</small></button>
+        <button class="mode" id="bPaper"><span>🖨️ Rosco en papel</span><small>Ficha para imprimir por equipos, con solucionario y preguntas de reflexión.</small></button>
+      </div>
+      <div class="row" style="justify-content:center;margin-top:12px"><button class="gh" id="bResume" style="display:none">Volver a la partida en curso</button></div>
+    </div>
   </div>
 </section>
 
@@ -238,6 +271,33 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
   </div>
 </section>
 
+<section id="vBoard" class="side hidden">
+  <div class="card play">
+    <div class="turn" style="background:var(--az)"><span>Toda la clase</span><span class="clock" id="bdClock">Sin límite</span></div>
+    <div class="wrap" id="wrapB">
+      <div class="center">
+        <div class="tag" id="bdTag"></div>
+        <div class="clue" id="bdClue"></div>
+        <div class="cW" id="bdAns" style="min-height:1.3em"></div>
+        <div class="btns" id="bdB1"><button class="nj" id="bdShow">Mostrar respuesta</button><button class="gh" id="bdPass">Pasapalabra</button></div>
+        <div class="btns hidden" id="bdB2"><button class="vd" id="bdOk">✓ Acertada</button><button style="background:var(--ko)" id="bdKo">✗ Fallada</button></div>
+      </div>
+    </div>
+    <div class="mini"><span style="color:var(--vdo)">Aciertos <b id="bdO">0</b></span><span style="color:var(--ko)">Fallos <b id="bdK">0</b></span><span style="color:var(--az)">Pendientes <b id="bdP">0</b></span></div>
+  </div>
+  <div class="card rkS">
+    <h2 style="font-size:1.15rem">Toda la clase</h2>
+    <p class="intro" style="font-size:.92rem">Lee la definición, deja que la clase responda en voz alta y pulsa «Mostrar respuesta» para marcar si la han acertado.</p>
+    <div class="row" style="margin-top:12px"><label>Tiempo <select id="bdTime"><option value="0">Sin límite</option><option value="10">10 min</option><option value="15" selected>15 min</option><option value="20">20 min</option></select></label><button class="vd" id="bdStart">Empezar</button></div>
+    <div class="tools" style="margin-top:16px"><button class="gh" id="bdEnd">Terminar · Puesta en común</button></div>
+  </div>
+</section>
+
+<section id="vPaper" class="hidden">
+  <div class="card noprint row" style="justify-content:space-between;max-width:820px;margin:0 auto 16px"><div><b>Rosco en papel</b><div class="mem">Página 1: ficha para cada equipo · Página 2: solucionario y preguntas de reflexión.</div></div><div class="row"><button class="nj" id="bPrint">Imprimir / Guardar PDF</button><button class="gh" id="bPaperBack">← Volver</button></div></div>
+  <div id="paper"></div>
+</section>
+
 <!-- ===== EQUIPOS (iPad) ===== -->
 <section id="vPick" class="narrow hidden">
   <div class="card"><h2>¿Cuál es vuestro equipo?</h2><div class="pickG" id="pickG"></div><div class="err" id="pickErr"></div></div>
@@ -246,7 +306,7 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 <section id="vMem" class="narrow hidden">
   <div class="card">
     <h2 id="memTitle"></h2>
-    <p class="intro">Pasaos el iPad: cada uno escribe su nombre y pulsa «Añadir».</p>
+    <p class="intro">Todo el equipo usa <b>este mismo iPad</b>: pasáoslo y que cada uno escriba su nombre y pulse «Añadir».</p>
     <div class="memList" id="memList"></div>
     <div class="row"><input id="memIn" placeholder="Tu nombre y primer apellido" autocomplete="off" style="flex:1;min-width:180px"><button class="gh" id="memAdd">Añadir</button></div>
     <div class="err" id="memErr"></div>
@@ -273,7 +333,7 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 
 <section id="vRev" class="side hidden">
   <div class="card">
-    <h2 id="revT"></h2><p class="intro" id="revP"></p>
+    <div class="row" style="justify-content:space-between"><h2 id="revT" style="margin:0"></h2><button class="nj stuNew">Nueva partida</button></div><p class="intro" id="revP"></p>
     <table class="rev" id="revTab"></table>
   </div>
   <div class="card rkS"><h2 style="font-size:1.15rem">Ranking</h2><div id="rkSide2"></div></div>
@@ -317,7 +377,7 @@ const N=W.length;
 const ASK={A:"¿Qué es lo último que os ha dado alegría? ¿Con quién la compartisteis?",B:"¿Cuándo os aburrís? ¿Puede servir el aburrimiento para algo (descansar, imaginar, inventar)?",C:"¿Recordáis a alguien que lo estaba pasando mal? ¿Qué hicisteis o qué podríais haber hecho?",D:"¿Qué podemos hacer cuando algo no sale como esperábamos?",E:"¿Qué os llena de entusiasmo? ¿Cómo se lo contagiáis a los demás?",F:"Cuando algo os sale mal, ¿qué os ayuda a volver a intentarlo?",G:"¿A quién le daríais hoy las gracias? ¿Por qué?",H:"¿En qué momento os habéis sentido afortunados?",I:"¿Qué podemos hacer para calmarnos antes de decir o hacer algo de lo que nos arrepintamos?",J:"¿Qué celebración recordáis con júbilo? ¿Qué la hizo especial?",L:"¿Alguna vez os habéis sentido solos en clase o en el patio? ¿Cómo podemos evitar que alguien se sienta así?",M:"¿Nos protege el miedo? ¿Qué os ayuda cuando tenéis miedo?",N:"¿Cómo podemos alegrarnos de verdad por lo bueno que le pasa a otra persona?",Ñ:"¿A quién o qué echáis de menos? ¿Qué hacéis para sentirlo cerca?",O:"¿De qué os sentís orgullosos? ¿Cuándo deja el orgullo de ser bueno?",P:"¿Qué os preocupa de este curso? ¿Con quién podéis hablarlo?",Q:"¿Qué lugar, persona o actividad os da tranquilidad?",R:"¿Qué nos ayuda a perdonar? ¿Qué nos pasa si guardamos rencor mucho tiempo?",S:"¿Cuál es la mejor sorpresa que os han dado? ¿Y la que habéis dado vosotros?",T:"¿Qué o quién os despierta ternura?",U:"Cuando sentimos culpa, ¿cómo podemos reparar el daño?",V:"¿Cómo podemos ayudar a un compañero que está pasando vergüenza?",X:"¿Qué os ha dejado perplejos alguna vez?",Z:"¿Qué os ayuda cuando estáis tristes? ¿Está bien llorar?"};
 const COL=["#3490b0","#ee712a","#7d8200","#1f6a85","#b9501a","#5f9fb8","#9a9e00","#c8613a","#2a7a96","#d98a1f"];
 const DEF=["Equipo Alegría","Equipo Gratitud","Equipo Calma","Equipo Ilusión","Equipo Ternura","Equipo Confianza","Equipo Entusiasmo","Equipo Esperanza","Equipo Serenidad","Equipo Amistad"];
-const VIEWS=["vCover","vNoApi","vMsg","vSetup","vLobby","vLive","vEnd","vPC","vPick","vMem","vPlay","vRev"];
+const VIEWS=["vBoard","vPaper","vCover","vNoApi","vMsg","vSetup","vLobby","vLive","vEnd","vPC","vPick","vMem","vPlay","vRev"];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const norm=s=>s.toLowerCase().replace(/ñ/g,"#").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z#]/g,"");
@@ -325,7 +385,7 @@ const fmt=ms=>{let s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+":"+
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const cur=()=>VIEWS.find(v=>!$(v).classList.contains("hidden"));
 function show(v){VIEWS.forEach(x=>$(x).classList.toggle("hidden",x!=v));}
-function msg(t,p,x){$("msgT").textContent=t;$("msgP").textContent=p||"";$("msgX").innerHTML=x||"";show("vMsg");}
+function msg(t,p,x){$("msgT").textContent=t;$("msgP").textContent=p||"";$("msgX").innerHTML=x||"";$("msgNew").classList.toggle("hidden",PROFE);show("vMsg");}
 
 /* ---- servidor ---- */
 let off=0,G=null,R={},CODE="";
@@ -335,7 +395,8 @@ const now=()=>Date.now()+off;
 const stOf=i=>(R[i]&&R[i].st)||"p".repeat(N);
 const memOf=i=>(R[i]&&R[i].mem)||[];
 const cnt=(s,c)=>s.split("").filter(x=>x==c).length;
-const teams=()=>DEF.slice(0,G.n).map((name,i)=>({name,col:COL[i],i,st:stOf(i),mem:memOf(i),on:!!R[i]}));
+let LOCAL=null;
+const teams=()=>LOCAL?[{name:"Toda la clase",col:COL[0],i:0,st:LOCAL.st,mem:[],on:true}]:DEF.slice(0,G.n).map((name,i)=>({name,col:COL[i],i,st:stOf(i),mem:memOf(i),on:!!R[i]}));
 const sorted=()=>teams().sort((a,b)=>cnt(b.st,"o")-cnt(a.st,"o")||cnt(a.st,"k")-cnt(b.st,"k")||((R[a.i]&&R[a.i].t)||0)-((R[b.i]&&R[b.i].t)||0));
 const ended=()=>G&&(G.status=="fin"||(G.status=="juego"&&G.end<=now()));
 
@@ -350,13 +411,13 @@ async function profeInit(){
   for(let i=2;i<=10;i++)$("nT").insertAdjacentHTML("beforeend",`<option ${i==10?"selected":""}>${i}</option>`);
   $("key").value=ls.get("rosco_clave")||"";
   $("stuLink").textContent=location.href.replace(/[#?].*$/,"").replace(/index\.html$/,"");
-  buildRing($("wrapP"),"P");
+  buildRing($("wrapP"),"P");buildRing($("wrapB"),"B");
   $("coverProfe").classList.remove("hidden");show("vCover");
   CODE=ls.get("rosco_codigo")||"";
-  if(CODE){try{await apiGet();if(G)$("bResume").style.display="";}catch(e){}}
+  if(CODE){try{await apiGet();if(G){$("bResume").style.display="";$("bResume").textContent=ended()?"Ver resultados de la última partida":"Volver a la partida en curso";}}catch(e){}}
 }
-$("bPrep").onclick=()=>show("vSetup");
-$("bResume").onclick=()=>{if(G.status=="espera")goLobby();else if(G.status=="juego"&&!ended())goLive();else goEnd();};
+$("bPrep").onclick=()=>{LOCAL=null;show("vSetup");};
+$("bResume").onclick=()=>{LOCAL=null;if(G.status=="espera")goLobby();else if(G.status=="juego"&&!ended())goLive();else goEnd();};
 async function sendCfg(game,extra){
   const k=$("key").value.trim();const j=await apiPost({action:"config",key:k,game,...extra});
   if(j.error=="clave")throw new Error("La clave de profesora no es correcta.");
@@ -383,6 +444,7 @@ $("bGo").onclick=async()=>{
   $("bGo").disabled=false;
 };
 function drawLive(){
+  if(finishing)return;
   const s=sorted(),done=s.filter(t=>!t.st.includes("p")).length;
   $("liveInfo").innerHTML=`Código <span class="lvCode">${CODE}</span> · ${s.length} equipos · ${done} han completado el rosco`;
   $("rkT").innerHTML="<tr><th>#</th><th>Equipo</th><th style='text-align:center'>Aciertos</th><th>Progreso</th><th>Fallos</th><th>Pendientes</th></tr>"+s.map((t,p)=>{const o=cnt(t.st,"o"),k=cnt(t.st,"k"),pe=cnt(t.st,"p");
@@ -406,11 +468,11 @@ function goEnd(){
   $("tabEnd").innerHTML="<tr><th>#</th><th>Equipo</th><th>Miembros</th><th>Aciertos</th><th>Fallos</th><th>Sin responder</th></tr>"+s.map((t,p)=>`<tr><td class="pos">${p+1}</td><td><span class="dot" style="background:${t.col};margin-right:6px;vertical-align:-2px"></span><b>${esc(t.name)}</b></td><td class="mem">${esc(t.mem.join(", "))}</td><td><b style="color:var(--vdo)">${cnt(t.st,"o")}</b></td><td>${cnt(t.st,"k")}</td><td>${cnt(t.st,"p")}</td></tr>`).join("");
   show("vEnd");
 }
-$("bNew").onclick=()=>show("vCover");
+$("bNew").onclick=()=>{clearInterval(poll);clearInterval(tickP);show("vSetup");};
 /* rosco resuelto · puesta en común */
 let pcI=0,seen=new Set();
 $("bPC").onclick=()=>{pcI=0;show("vPC");pc();};
-$("bBackRank").onclick=()=>show("vEnd");
+$("bBackRank").onclick=()=>show(LOCAL?"vCover":"vEnd");
 $("wrapP").onclick=e=>{const l=e.target.closest(".l");if(l){pcI=+l.dataset.i;pc();}};
 function pc(){
   const w=W[pcI],t=teams(),ok=t.filter(x=>x.st[pcI]=="o").length;
@@ -419,7 +481,9 @@ function pc(){
   $("pcL").textContent=w[0];$("pcTag").textContent=w[1];$("pcDef").textContent=w[2];
   const rev=seen.has(pcI);$("pcHid").classList.toggle("hidden",rev);$("pcShow").classList.toggle("hidden",!rev);
   $("pcW").textContent=w[3][0].toUpperCase();
-  $("pcChips").innerHTML=`<span class="chip" style="background:var(--azo)">${ok} de ${t.length} equipos</span>`+t.map(x=>{const s=x.st[pcI],a=R[x.i]&&R[x.i].ans&&R[x.i].ans[pcI];return `<span class="chip" style="background:${s=="o"?"var(--vdo)":s=="k"?"var(--ko)":"#9fb3bc"}" title="${esc(a)}">${s=="o"?"✓":s=="k"?"✗ "+esc(a||""):"–"} · ${esc(x.name)}</span>`}).join("");
+  $("bBackRank").textContent=LOCAL?"← Volver al inicio":"Ver clasificación";
+  if(LOCAL){const s=LOCAL.st[pcI];$("pcChips").innerHTML=`<span class="chip" style="background:${s=="o"?"var(--vdo)":s=="k"?"var(--ko)":"#9fb3bc"}">${s=="o"?"✓ La clase la acertó":s=="k"?"✗ La clase la falló":"– Sin responder"}</span>`;}
+  else $("pcChips").innerHTML=`<span class="chip" style="background:var(--azo)">${ok} de ${t.length} equipos</span>`+t.map(x=>{const s=x.st[pcI],a=R[x.i]&&R[x.i].ans&&R[x.i].ans[pcI];return `<span class="chip" style="background:${s=="o"?"var(--vdo)":s=="k"?"var(--ko)":"#9fb3bc"}" title="${esc(a)}">${s=="o"?"✓":s=="k"?"✗ "+esc(a||""):"–"} · ${esc(x.name)}</span>`}).join("");
   $("pcAsk").innerHTML="<b>Para reflexionar:</b> "+esc(ASK[w[0]])+"<br><span class='mem'>¿Cómo se nota esta emoción en el cuerpo? Recordad: no hay emociones buenas ni malas.</span>";
   $("bPrev").disabled=pcI==0;$("bNext").textContent=pcI==N-1?"Cierre →":"Siguiente →";
 }
@@ -430,6 +494,45 @@ $("bNext").onclick=()=>{if(pcI<N-1){pcI++;pc();}else{
   $("pcHid").classList.add("hidden");$("pcShow").classList.add("hidden");$("pcAsk").innerHTML="<b>Para reflexionar:</b> ¿Qué palabra nueva os lleváis hoy? ¿Qué emoción os gustaría cuidar más esta semana?";}};
 document.addEventListener("keydown",e=>{if(cur()=="vPC"){if(e.key=="ArrowRight")$("bNext").click();if(e.key=="ArrowLeft")$("bPrev").click();if(e.key==" "&&!seen.has(pcI)){e.preventDefault();$("bReveal").click();}}});
 
+/* ================= PIZARRA (sin iPads) ================= */
+let bdTick=null;
+$("bBoard").onclick=()=>{LOCAL={st:"p".repeat(N),cur:0,end:0};clearInterval(bdTick);$("bdStart").disabled=false;$("bdTime").disabled=false;$("bdClock").textContent="Sin empezar";show("vBoard");drawBoard();};
+function bdNext(){for(let k=1;k<=N;k++){const j=(LOCAL.cur+k)%N;if(LOCAL.st[j]=="p"){LOCAL.cur=j;return true}}return false;}
+function drawBoard(){
+  const L=LOCAL;W.forEach((x,i)=>{$("B"+i).className="l"+(L.st[i]!="p"?" "+L.st[i]:"")+(i==L.cur&&L.st[i]=="p"?" cur":"")});
+  $("bdTag").textContent=W[L.cur][1];$("bdClue").textContent=W[L.cur][2];$("bdAns").textContent="";
+  $("bdB1").classList.remove("hidden");$("bdB2").classList.add("hidden");
+  $("bdO").textContent=cnt(L.st,"o");$("bdK").textContent=cnt(L.st,"k");$("bdP").textContent=cnt(L.st,"p");
+}
+$("bdShow").onclick=()=>{$("bdAns").textContent=W[LOCAL.cur][3][0].toUpperCase();$("bdB1").classList.add("hidden");$("bdB2").classList.remove("hidden");};
+function bdMark(c){const L=LOCAL;L.st=L.st.slice(0,L.cur)+c+L.st.slice(L.cur+1);if(!bdNext())return bdFinish();drawBoard();}
+$("bdOk").onclick=()=>bdMark("o");$("bdKo").onclick=()=>bdMark("k");
+$("bdPass").onclick=()=>{bdNext();drawBoard();};
+$("bdStart").onclick=()=>{const m=+$("bdTime").value;$("bdStart").disabled=true;$("bdTime").disabled=true;if(!m){$("bdClock").textContent="Sin límite";return}
+  LOCAL.end=Date.now()+m*60000;clearInterval(bdTick);bdTick=setInterval(()=>{const l=LOCAL.end-Date.now();$("bdClock").textContent=fmt(l);if(l<=0)bdFinish();},250);};
+function bdFinish(){clearInterval(bdTick);pcI=0;seen=new Set();show("vPC");pc();}
+$("bdEnd").onclick=bdFinish;
+
+/* ================= PAPEL ================= */
+function ringSVG(sz){const r=sz/2-22;return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" aria-hidden="true">${W.map((x,i)=>{const a=-Math.PI/2+2*Math.PI*i/N,cx=sz/2+r*Math.cos(a),cy=sz/2+r*Math.sin(a);return `<circle cx="${cx}" cy="${cy}" r="15" fill="#fff" stroke="#3490b0" stroke-width="2.5"/><text x="${cx}" y="${cy+5.5}" text-anchor="middle" font-family="Fira Sans,sans-serif" font-weight="800" font-size="15" fill="#1f6a85">${x[0]}</text>`}).join("")}<text x="${sz/2}" y="${sz/2-4}" text-anchor="middle" font-family="Fira Sans,sans-serif" font-weight="800" font-size="17" fill="#b9501a">Rosco de las</text><text x="${sz/2}" y="${sz/2+18}" text-anchor="middle" font-family="Fira Sans,sans-serif" font-weight="800" font-size="17" fill="#b9501a">emociones</text></svg>`;}
+function buildPaper(){
+  $("paper").innerHTML=`<div class="sheet">
+    <div class="phead">${ringSVG(230)}<div><h2>El rosco de las emociones</h2><p class="mem" style="margin:2px 0 10px">Sesión 1 · Vocabulario emocional · Salesianas Nervión</p>
+      <p>Equipo: <span class="line"></span></p><p>Nombres: <span class="line" style="min-width:300px"></span></p>
+      <p class="mem" style="font-size:.85rem">Leed cada definición y poneos de acuerdo antes de escribir. Si no sabéis una, pasad a la siguiente y volved al final. Recordad: no hay emociones buenas ni malas.</p></div></div>
+    <table class="ptab"><tr><th></th><th>Definición</th><th class="ans">Vuestra respuesta</th></tr>${W.map(w=>`<tr><td class="lt">${w[0]}</td><td><b style="color:var(--njo)">${w[1]}.</b> ${esc(w[2])}</td><td class="ans"></td></tr>`).join("")}</table>
+    <p class="mem" style="margin-top:8px">Aciertos: ______ / ${N}</p>
+  </div>
+  <div class="sheet">
+    <h2>Solucionario y preguntas para la puesta en común</h2><p class="mem" style="margin:2px 0 10px">Para el profesorado</p>
+    <table class="ptab"><tr><th></th><th>Emoción</th><th>Pregunta de reflexión</th></tr>${W.map(w=>`<tr><td class="lt">${w[0]}</td><td><b>${esc(w[3][0])}</b></td><td>${esc(ASK[w[0]])}</td></tr>`).join("")}</table>
+  </div>`;
+  show("vPaper");window.scrollTo(0,0);
+}
+$("bPaper").onclick=buildPaper;
+$("bPrint").onclick=()=>window.print();
+$("bPaperBack").onclick=()=>show("vCover");
+
 /* ================= EQUIPOS ================= */
 let me=null,dirty=false,tickS=null,pollS=null;
 const KEY=()=>"rosco_eq_"+G.id;
@@ -439,23 +542,25 @@ let started=false;
 async function stuInit(){
   buildRing($("wrap"),"L");$("coverStu").classList.remove("hidden");show("vCover");
   const c=ls.get("rosco_sala");
-  if(c){CODE=c;try{await apiGet();if(G&&ls.get(KEY()))return enter();}catch(e){}}
+  if(c){CODE=c;try{await apiGet();if(G&&G.status!="fin"&&!ended()&&ls.get(KEY()))return enter();}catch(e){}}
   CODE="";$("codeIn").focus();
 }
 async function tryCode(){
   const c=$("codeIn").value.replace(/\D/g,"");if(c.length!=4){$("codeErr").textContent="El código tiene 4 cifras.";return}
-  CODE=c;$("bEnter").disabled=true;
+  CODE=c;$("bEnter").disabled=true;$("bEnter").textContent="Entrando…";$("codeErr").textContent="";
   try{await apiGet();if(!G){$("codeErr").textContent="No hay ninguna partida con ese código. Revisadlo en la pizarra.";CODE="";}else{ls.set("rosco_sala",c);enter();}}
   catch(e){$("codeErr").textContent="Sin conexión. Probad otra vez.";}
-  $("bEnter").disabled=false;
+  $("bEnter").disabled=false;$("bEnter").textContent="Entrar";
 }
 $("bEnter").onclick=tryCode;$("codeIn").addEventListener("keydown",e=>{if(e.key=="Enter")tryCode()});
-function enter(){$("codeErr").textContent="";route();if(!started){started=true;pollS=setInterval(async()=>{try{await apiGet();sync();route();}catch(e){}},4000);}}
+function leaveGame(){try{localStorage.removeItem("rosco_sala");if(G)localStorage.removeItem(KEY());}catch(e){}me=null;G=null;R={};CODE="";clearInterval(pollS);started=false;clearInterval(tickS);$("codeIn").value="";show("vCover");$("codeIn").focus();}
+document.querySelectorAll(".stuNew").forEach(b=>b.onclick=leaveGame);
+function enter(){$("codeErr").textContent="";route();if(!started){started=true;pollS=setInterval(async()=>{try{await apiGet();sync();route();}catch(e){}},5000);}}
 function route(){
   if(!G){me=null;return msg("La partida ya no existe","Recargad la página y escribid el código nuevo.");}
   if(me&&me.id!==G.id)me=null;
   if(!me)me=ls.get(KEY());
-  if(!me){if(G.status=="espera")return drawPick();return msg("La partida ya ha empezado","Si vuestro equipo ya estaba jugando, usad el mismo iPad. Si no, avisad a la profesora.");}
+  if(!me){if(picking)return;if(G.status=="espera")return drawPick();return msg("La partida ya ha empezado","Si vuestro equipo ya estaba jugando, usad el mismo iPad. Si no, avisad a la profesora.");}
   if(!me.ready&&G.status=="espera")return cur()=="vMem"?drawMem():goMem();
   if(G.status=="espera")return msg(DEF[me.team],"¡Listos! Esperad a que la profesora dé la salida…",`<div class="memList" style="justify-content:center">${me.mem.map(m=>`<span>${esc(m)}</span>`).join("")}</div>`);
   if(G.status=="juego"&&!ended()&&me.st.includes("p"))return startPlay();
@@ -466,11 +571,14 @@ function drawPick(){
   if(cur()!="vPick"){show("vPick");$("pickErr").textContent="";}
   $("pickG").innerHTML=DEF.slice(0,G.n).map((n,i)=>`<button data-i="${i}" style="background:${COL[i]}" ${R[i]?"disabled":""}><span style="font-size:1.15rem">${esc(n)}</span><small>${R[i]?"Ya elegido":"&nbsp;"}</small></button>`).join("");
 }
+let picking=false;
 $("pickG").onclick=async e=>{
-  const b=e.target.closest("button");if(!b||b.disabled)return;const i=+b.dataset.i;
-  try{await apiGet();}catch(err){$("pickErr").textContent="Sin conexión, probad otra vez.";return}
-  if(R[i]){drawPick();$("pickErr").textContent="Otro iPad acaba de elegir ese equipo. Elegid otro.";return}
-  me={id:G.id,team:i,st:"p".repeat(N),ans:Array(N).fill(""),mem:[],cur:0,ready:false};save();goMem();
+  const b=e.target.closest("button");if(!b||b.disabled||picking)return;const i=+b.dataset.i;
+  picking=true;[...$("pickG").children].forEach(x=>x.disabled=true);b.querySelector("small").textContent="Entrando…";
+  me={id:G.id,team:i,st:"p".repeat(N),ans:Array(N).fill(""),mem:[],cur:0,ready:false};
+  try{const j=await apiPost({action:"result",id:me.id,team:i,st:me.st,ans:me.ans,mem:me.mem});if(j.error)throw 0;ls.set(KEY(),me);goMem();}
+  catch(err){me=null;drawPick();$("pickErr").textContent="No se ha podido entrar. Probad otra vez.";}
+  picking=false;
 };
 function goMem(){show("vMem");$("memTitle").textContent=DEF[me.team];$("memTitle").style.color=COL[me.team];drawMem();}
 function drawMem(){
