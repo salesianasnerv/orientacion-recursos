@@ -3,7 +3,7 @@
 // 2) Implementar > Nueva implementación > Aplicación web · Ejecutar como: Yo · Acceso: Cualquier usuario.
 // 3) Copia la URL que termina en /exec y pégala en index.html (API_URL).
 // Cada partida tiene un código de 4 cifras, así varias clases pueden jugar a la vez.
-const CLAVE = 'cambia-esta-clave';
+const CLAVE = 'orientacion';
 const CADUCA_MS = 12 * 3600 * 1000; // las partidas se borran a las 12 h
 
 function doGet(e) { return out(read(String((e && e.parameter && e.parameter.c) || ''))); }
