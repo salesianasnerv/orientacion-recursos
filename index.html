@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orientación · Recursos</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--az:#3490b0;--azo:#1f6a85;--vd:#b6bc00;--vdo:#7d8200;--nj:#ee712a;--njo:#b9501a;--ink:#23323a;--mut:#5e6f78;--bg:#f4f9fb;--line:#dbe8ee}
+*{box-sizing:border-box}body{margin:0;font-family:"Fira Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--az);color:#fff;padding:28px 20px 24px;border-bottom:6px solid var(--vd)}
+.in{max-width:1100px;margin:0 auto}
+header h1{margin:0;font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:800}
+header p{margin:6px 0 0;opacity:.92}
+.stripe{height:5px;background:var(--nj)}
+main{padding:24px 20px 40px}
+.bloque{margin-bottom:34px}
+.bloque h2{display:flex;align-items:center;gap:10px;color:var(--azo);font-size:1.5rem;margin:0 0 4px}
+.bloque h2 i{width:12px;height:28px;border-radius:6px;background:var(--nj)}
+.bloque>p{color:var(--mut);margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.rec{background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 14px rgba(31,106,133,.08);display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--az)}
+.rec h3{margin:0;font-size:1.2rem}
+.rec p{margin:0;color:var(--mut);line-height:1.45;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tags span{font-size:.75rem;font-weight:700;background:#eef5d0;color:var(--vdo);padding:3px 9px;border-radius:999px}
+.acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.acc a{text-decoration:none;font-weight:700;border-radius:999px;padding:9px 16px;background:var(--nj);color:#fff}
+.acc a.sec{background:#e6eff3;color:var(--ink)}
+.acc a:focus-visible{outline:3px solid var(--azo);outline-offset:2px}
+footer{text-align:center;color:var(--mut);font-size:.85rem;padding:20px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header><div class="in"><h1>Orientación · Recursos</h1><p>Materiales de tutoría y orientación · Salesianas Nervión</p></div></header>
+<div class="stripe"></div>
+<main class="in" id="bloques"></main>
+<footer>Salesianas Nervión · Escuelas Salesianas María Auxiliadora</footer>
+<script>
+/* Para añadir un recurso: copia un objeto de "recursos" dentro del bloque que toque.
+   Para añadir un bloque nuevo: copia un objeto completo de BLOQUES. */
+const BLOQUES=[
+  {titulo:"Gestión emocional",desc:"Recursos para reconocer, nombrar y gestionar las emociones.",recursos:[
+    {titulo:"El rosco de las emociones",desc:"Juego por equipos para ampliar el vocabulario emocional: cada equipo resuelve el rosco en su iPad con ranking en directo, y al final se hace la puesta en común.",tags:["Tutoría","1º ESO","Por equipos"],
+     enlaces:[{txt:"Jugar (alumnado)",href:"gestion-emocional/rosco-emociones/"},{txt:"Profesorado",href:"gestion-emocional/rosco-emociones/#profe",sec:true}]}
+  ]}
+];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.getElementById("bloques").innerHTML=BLOQUES.map(b=>`<section class="bloque"><h2><i></i>${esc(b.titulo)}</h2><p>${esc(b.desc)}</p><div class="grid">${b.recursos.map(r=>`<article class="rec"><h3>${esc(r.titulo)}</h3><div class="tags">${r.tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div><p>${esc(r.desc)}</p><div class="acc">${r.enlaces.map(e=>`<a href="${esc(e.href)}" class="${e.sec?"sec":""}">${esc(e.txt)}</a>`).join("")}</div></article>`).join("")}</div></section>`).join("");
+</script>
+</body>
+</html>
