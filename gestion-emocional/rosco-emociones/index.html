@@ -115,7 +115,7 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
 .mode{display:grid;gap:6px;text-align:left;border-radius:16px;padding:16px;font-size:1.05rem}
 .mode small{font-weight:400;opacity:.92;font-size:.88rem;line-height:1.35}
-.mode:nth-child(2){background:var(--vdo)}.mode:nth-child(3){background:var(--nj)}
+.mode:nth-child(2){background:var(--vdo)}.mode:nth-child(4){background:var(--nj)}
 .sheet{background:#fff;border-radius:12px;padding:24px 28px;max-width:820px;margin:0 auto 16px;box-shadow:0 3px 14px rgba(31,106,133,.08)}
 .sheet h2{margin:0 0 4px}
 .sheet .line{border-bottom:1.5px dotted #9fb3bc;min-width:180px;display:inline-block}
@@ -180,12 +180,12 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 <section id="vCover" class="narrow hidden">
   <div class="card cover">
     <h2 style="font-size:1.6rem">¡Bienvenidos al rosco de las emociones!</h2>
-    <p class="intro">A veces sentimos alegría, miedo, enfado o tristeza, pero no siempre sabemos explicar qué nos pasa. Ponerle nombre a lo que sentimos nos ayuda a conocernos mejor y a entender a los demás. Hoy vamos a descubrir palabras nuevas jugando en equipo.</p>
+    <p class="intro">A veces sentimos alegría, miedo, enfado o tristeza, pero no siempre sabemos explicar qué nos pasa. Ponerle nombre a lo que sentimos nos ayuda a conocernos mejor y a entender a los demás. Hoy vamos a descubrir palabras nuevas jugando.</p>
     <h3>Cómo se juega</h3>
     <ol class="steps">
-      <li>Formad equipos de 3. Cada equipo usa <b>un solo iPad</b>.</li>
-      <li>Escribid el <b>código de sala</b> que aparece en la pizarra, elegid vuestro equipo y que cada uno escriba su nombre.</li>
-      <li>Cuando la profe dé la salida, leed cada definición y <b>poneos de acuerdo</b> antes de responder.</li>
+      <li><b>Por equipos:</b> formad los equipos que indique la profe; cada equipo usa <b>un solo iPad</b>. Escribid el <b>código de sala</b> de la pizarra, elegid vuestro equipo y que cada uno escriba su nombre.</li>
+      <li><b>A tu ritmo:</b> si la profe lo indica, juega tú solo/a en tu iPad, sin tiempo, y repite las veces que quieras.</li>
+      <li>Lee cada definición y, si jugáis en equipo, <b>poneos de acuerdo</b> antes de responder.</li>
       <li>¿No la sabéis? Pulsad <b>«Pasapalabra»</b>: volverá a salir en la siguiente vuelta.</li>
       <li>Cada acierto suma. En la pizarra y en vuestro iPad veréis el <b>ranking en directo</b>.</li>
       <li>Cuando se acabe el tiempo ya no se puede responder, pero podréis ver vuestras respuestas y las correctas.</li>
@@ -195,12 +195,15 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
     <div id="coverStu" class="hidden" style="margin-top:16px">
       <div class="row" style="justify-content:center"><input id="codeIn" inputmode="numeric" maxlength="4" placeholder="Código" aria-label="Código de sala" style="font-size:1.8rem;width:170px;text-align:center;letter-spacing:.2em;font-weight:800"><button class="nj" id="bEnter" style="font-size:1.2rem">Entrar</button></div>
       <div class="err" id="codeErr" style="text-align:center"></div>
+      <div style="text-align:center;margin-top:14px"><span class="mem">o bien</span><br><button class="vd" id="bSolo" style="margin-top:8px;font-size:1.1rem">🎯 Jugar a mi ritmo (individual)</button>
+        <div id="lastBox" class="hidden" style="margin-top:12px"><button class="gh" id="bLast">📄 Ver mi último rosco</button></div></div>
     </div>
     <div id="coverProfe" class="hidden" style="margin-top:18px">
       <h3 style="margin-top:0">¿Cómo vais a jugar?</h3>
       <div class="modes">
         <button class="mode" id="bPrep"><span>📱 Con iPads, por equipos</span><small>Cada equipo juega en su iPad y el ranking se ve en directo en la pizarra.</small></button>
         <button class="mode" id="bBoard"><span>🖥️ En la pizarra, toda la clase</span><small>Sin dispositivos: la clase responde en voz alta y tú marcas los aciertos.</small></button>
+        <button class="mode" id="bSoloInfo" style="background:var(--azo)"><span>🎯 Cada uno a su ritmo</span><small>Cada alumno en su iPad, sin tiempo ni sala, y puede repetirlo cuantas veces quiera.</small></button>
         <button class="mode" id="bPaper"><span>🖨️ Rosco en papel</span><small>Ficha para imprimir por equipos, con solucionario y preguntas de reflexión.</small></button>
       </div>
       <div class="row" style="justify-content:center;margin-top:12px"><button class="gh" id="bResume" style="display:none">Volver a la partida en curso</button></div>
@@ -212,9 +215,10 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 <section id="vSetup" class="narrow hidden">
   <div class="card">
     <h2>1. Preparamos la partida</h2>
-    <p class="intro">Elige el número de equipos y el tiempo. Al abrir la sala aparecerá un código: los equipos lo escriben en su iPad, eligen equipo y apuntan sus nombres, que verás aquí en directo.</p>
+    <p class="intro">Elige el número de equipos, cuántos miembros tiene cada uno y el tiempo. Al abrir la sala aparecerá un código: los equipos lo escriben en su iPad, eligen equipo y apuntan sus nombres, que verás aquí en directo.</p>
     <div class="row" style="margin-top:14px">
       <label>Número de equipos <select id="nT"></select></label>
+      <label>Miembros por equipo <select id="nM"></select></label>
       <label>Tiempo <select id="tT"><option value="10">10 min</option><option value="15" selected>15 min</option><option value="20">20 min</option><option value="25">25 min</option></select></label>
       <label>Clave de profesora <input id="key" type="password" autocomplete="off" style="width:170px"></label>
     </div>
@@ -253,6 +257,7 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
     <table class="rkT" id="tabEnd"></table>
     <div class="row" style="justify-content:center;margin-top:18px">
       <button class="nj" id="bPC">Rosco resuelto · Puesta en común</button>
+      <button class="gh" id="bCsv">⬇️ Descargar resultados (Excel)</button>
       <button class="gh" id="bNew">Nueva partida</button>
     </div>
   </div>
@@ -298,6 +303,38 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
   <div id="paper"></div>
 </section>
 
+<!-- ===== INDIVIDUAL (a su ritmo) ===== -->
+<section id="vSolo" class="side hidden">
+  <div class="card play">
+    <div class="turn" style="background:var(--azo)"><span id="soName">A mi ritmo</span><span class="clock" id="soClock">0:00</span></div>
+    <div class="wrap" id="wrapS">
+      <div class="center">
+        <div class="tag" id="soTag"></div>
+        <div class="clue" id="soClue"></div>
+        <input id="soAns" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Escribe la palabra" aria-label="Respuesta">
+        <div class="btns"><button class="vd" id="soOk">Comprobar</button><button class="nj" id="soPass">Pasapalabra</button></div>
+        <div class="fb" id="soFb" aria-live="polite"></div>
+      </div>
+    </div>
+    <div class="mini"><span style="color:var(--vdo)">Aciertos <b id="soO">0</b></span><span style="color:var(--ko)">Fallos <b id="soK">0</b></span><span style="color:var(--az)">Pendientes <b id="soP">0</b></span></div>
+  </div>
+  <div class="card rkS">
+    <h2 style="font-size:1.15rem">A tu ritmo</h2>
+    <p class="intro" style="font-size:.92rem">Sin prisa: lee bien cada definición. Si no la sabes, pulsa «Pasapalabra» y volverá a salir al final.</p>
+    <p class="intro" style="font-size:.92rem;margin-top:10px" id="soBest"></p>
+    <label class="mem" style="display:block;margin-top:12px">Tu nombre (opcional)<br><input id="soWho" autocomplete="off" style="width:100%;margin-top:4px"></label>
+    <div class="tools" style="margin-top:14px"><button class="gh" id="soStop">Terminar y ver respuestas</button></div>
+  </div>
+</section>
+
+<section id="vSoloEnd" class="narrow hidden">
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><h2 id="seT" style="margin:0"></h2><div class="row"><button class="nj" id="seAgain">🔁 Jugar a mi ritmo</button><button class="gh" id="seCode">🔢 Entrar con código</button><button class="gh" id="seDown">⬇️ Descargar resultados</button></div></div>
+    <p class="intro" id="seP" style="margin:8px 0 12px"></p>
+    <table class="rev" id="seTab"></table>
+  </div>
+</section>
+
 <!-- ===== EQUIPOS (iPad) ===== -->
 <section id="vPick" class="narrow hidden">
   <div class="card"><h2>¿Cuál es vuestro equipo?</h2><div class="pickG" id="pickG"></div><div class="err" id="pickErr"></div></div>
@@ -306,7 +343,7 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 <section id="vMem" class="narrow hidden">
   <div class="card">
     <h2 id="memTitle"></h2>
-    <p class="intro">Todo el equipo usa <b>este mismo iPad</b>: pasáoslo y que cada uno escriba su nombre y pulse «Añadir».</p>
+    <p class="intro">Todo el equipo usa <b>este mismo iPad</b>: pasáoslo y que cada uno escriba su nombre y pulse «Añadir». <b id="memCnt"></b></p>
     <div class="memList" id="memList"></div>
     <div class="row"><input id="memIn" placeholder="Tu nombre y primer apellido" autocomplete="off" style="flex:1;min-width:180px"><button class="gh" id="memAdd">Añadir</button></div>
     <div class="err" id="memErr"></div>
@@ -333,7 +370,7 @@ input,select,textarea{font:inherit;padding:9px 12px;border:2px solid var(--line)
 
 <section id="vRev" class="side hidden">
   <div class="card">
-    <div class="row" style="justify-content:space-between"><h2 id="revT" style="margin:0"></h2><button class="nj stuNew">Nueva partida</button></div><p class="intro" id="revP"></p>
+    <div class="row" style="justify-content:space-between"><h2 id="revT" style="margin:0"></h2><div class="row"><button class="gh hidden" id="revDown">⬇️ Descargar resultados</button><button class="nj stuNew">Jugar otro (código o a mi ritmo)</button></div></div><p class="intro" id="revP"></p>
     <table class="rev" id="revTab"></table>
   </div>
   <div class="card rkS"><h2 style="font-size:1.15rem">Ranking</h2><div id="rkSide2"></div></div>
@@ -375,9 +412,9 @@ const W=[
 ];
 const N=W.length;
 const ASK={A:"¿Qué es lo último que os ha dado alegría? ¿Con quién la compartisteis?",B:"¿Cuándo os aburrís? ¿Puede servir el aburrimiento para algo (descansar, imaginar, inventar)?",C:"¿Recordáis a alguien que lo estaba pasando mal? ¿Qué hicisteis o qué podríais haber hecho?",D:"¿Qué podemos hacer cuando algo no sale como esperábamos?",E:"¿Qué os llena de entusiasmo? ¿Cómo se lo contagiáis a los demás?",F:"Cuando algo os sale mal, ¿qué os ayuda a volver a intentarlo?",G:"¿A quién le daríais hoy las gracias? ¿Por qué?",H:"¿En qué momento os habéis sentido afortunados?",I:"¿Qué podemos hacer para calmarnos antes de decir o hacer algo de lo que nos arrepintamos?",J:"¿Qué celebración recordáis con júbilo? ¿Qué la hizo especial?",L:"¿Alguna vez os habéis sentido solos en clase o en el patio? ¿Cómo podemos evitar que alguien se sienta así?",M:"¿Nos protege el miedo? ¿Qué os ayuda cuando tenéis miedo?",N:"¿Cómo podemos alegrarnos de verdad por lo bueno que le pasa a otra persona?",Ñ:"¿A quién o qué echáis de menos? ¿Qué hacéis para sentirlo cerca?",O:"¿De qué os sentís orgullosos? ¿Cuándo deja el orgullo de ser bueno?",P:"¿Qué os preocupa de este curso? ¿Con quién podéis hablarlo?",Q:"¿Qué lugar, persona o actividad os da tranquilidad?",R:"¿Qué nos ayuda a perdonar? ¿Qué nos pasa si guardamos rencor mucho tiempo?",S:"¿Cuál es la mejor sorpresa que os han dado? ¿Y la que habéis dado vosotros?",T:"¿Qué o quién os despierta ternura?",U:"Cuando sentimos culpa, ¿cómo podemos reparar el daño?",V:"¿Cómo podemos ayudar a un compañero que está pasando vergüenza?",X:"¿Qué os ha dejado perplejos alguna vez?",Z:"¿Qué os ayuda cuando estáis tristes? ¿Está bien llorar?"};
-const COL=["#3490b0","#ee712a","#7d8200","#1f6a85","#b9501a","#5f9fb8","#9a9e00","#c8613a","#2a7a96","#d98a1f"];
-const DEF=["Equipo Alegría","Equipo Gratitud","Equipo Calma","Equipo Ilusión","Equipo Ternura","Equipo Confianza","Equipo Entusiasmo","Equipo Esperanza","Equipo Serenidad","Equipo Amistad"];
-const VIEWS=["vBoard","vPaper","vCover","vNoApi","vMsg","vSetup","vLobby","vLive","vEnd","vPC","vPick","vMem","vPlay","vRev"];
+const COL=["#3490b0","#ee712a","#7d8200","#1f6a85","#b9501a","#5f9fb8","#9a9e00","#c8613a","#2a7a96","#d98a1f","#4f7d1f","#a3461d","#2c5f75","#c77d00","#6b8f24"];
+const DEF=["Equipo Alegría","Equipo Gratitud","Equipo Calma","Equipo Ilusión","Equipo Ternura","Equipo Confianza","Equipo Entusiasmo","Equipo Esperanza","Equipo Serenidad","Equipo Amistad","Equipo Bondad","Equipo Ánimo","Equipo Cariño","Equipo Empatía","Equipo Paz"];
+const VIEWS=["vSolo","vSoloEnd","vBoard","vPaper","vCover","vNoApi","vMsg","vSetup","vLobby","vLive","vEnd","vPC","vPick","vMem","vPlay","vRev"];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const norm=s=>s.toLowerCase().replace(/ñ/g,"#").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z#]/g,"");
@@ -408,7 +445,9 @@ function sideRank(el,mine){
 /* ================= PROFESORA ================= */
 let poll=null,tickP=null;
 async function profeInit(){
-  for(let i=2;i<=10;i++)$("nT").insertAdjacentHTML("beforeend",`<option ${i==10?"selected":""}>${i}</option>`);
+  const lt=ls.get("rosco_nT")||10,lm=ls.get("rosco_nM")||3;
+  for(let i=2;i<=15;i++)$("nT").insertAdjacentHTML("beforeend",`<option ${i==lt?"selected":""}>${i}</option>`);
+  for(let i=1;i<=6;i++)$("nM").insertAdjacentHTML("beforeend",`<option ${i==lm?"selected":""}>${i}</option>`);
   $("key").value=ls.get("rosco_clave")||"";
   $("stuLink").textContent=location.href.replace(/[#?].*$/,"").replace(/index\.html$/,"");
   buildRing($("wrapP"),"P");buildRing($("wrapB"),"B");
@@ -426,7 +465,8 @@ async function sendCfg(game,extra){
 $("bOpen").onclick=async()=>{
   $("setErr").textContent="";$("bOpen").disabled=true;
   CODE="";
-  try{await sendCfg({id:Date.now().toString(36),n:+$("nT").value,status:"espera",dur:+$("tT").value});ls.set("rosco_codigo",CODE);goLobby();}
+  ls.set("rosco_nT",+$("nT").value);ls.set("rosco_nM",+$("nM").value);
+  try{await sendCfg({id:Date.now().toString(36),n:+$("nT").value,per:+$("nM").value,status:"espera",dur:+$("tT").value});ls.set("rosco_codigo",CODE);goLobby();}
   catch(e){$("setErr").textContent=e.message||"No se ha podido abrir la sala.";}
   $("bOpen").disabled=false;
 };
@@ -533,6 +573,68 @@ $("bPaper").onclick=buildPaper;
 $("bPrint").onclick=()=>window.print();
 $("bPaperBack").onclick=()=>show("vCover");
 
+/* ================= GUARDAR / DESCARGAR ================= */
+function fecha(t){return new Date(t).toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}
+function saveLast(o){ls.set("rosco_ultimo",o);$("lastBox").classList.remove("hidden");}
+function tablaRes(o,correctas){return `<tr><th></th><th>Definición</th><th>Respuesta</th>${correctas?"<th>Correcta</th>":""}</tr>`+W.map((w,i)=>{const s=o.st[i];return `<tr><td class="lt">${w[0]}</td><td>${esc(w[2])}</td><td class="${s=="o"?"ok":s=="k"?"ko":"pe"}">${s=="p"?"—":(s=="o"?"✓ ":"✗ ")+esc(o.ans[i])}</td>${correctas?`<td><b>${esc(w[3][0])}</b></td>`:""}</tr>`}).join("");}
+function resumen(o){const k=cnt(o.st,"k");return `${cnt(o.st,"o")} aciertos, ${k} ${k==1?"fallo":"fallos"}, ${cnt(o.st,"p")} sin responder`+(o.ms?` · ${fmt(o.ms)}`:"");}
+function descargar(nombre,contenido,tipo){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([contenido],{type:tipo}));a.download=nombre;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);}
+function bajarRes(o){
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Rosco de las emociones · resultados</title><style>body{font-family:system-ui,sans-serif;color:#23323a;max-width:820px;margin:24px auto;padding:0 16px}h1{color:#1f6a85;margin:0}table{width:100%;border-collapse:collapse;font-size:14px;margin-top:14px}td,th{border:1px solid #cfdde3;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eaf4f8}.lt{font-weight:800;color:#1f6a85}.ok{color:#7d8200;font-weight:700}.ko{color:#d2463a;font-weight:700}.pe{color:#5e6f78}</style></head><body><h1>El rosco de las emociones</h1><p>${esc(o.tipo)}${o.quien?" · <b>"+esc(o.quien)+"</b>":""} · ${fecha(o.fecha)}</p><p><b>${resumen(o)}</b></p><table>${tablaRes(o,true)}</table><p style="color:#5e6f78;font-size:13px">Salesianas Nervión · Sesión 1 · Vocabulario emocional</p></body></html>`;
+  descargar(`rosco-emociones-${new Date(o.fecha).toISOString().slice(0,10)}.html`,html,"text/html");
+}
+function verRes(o,extra){
+  $("seT").textContent=cnt(o.st,"p")?"Tu rosco":"¡Rosco completado!";
+  $("seP").textContent=`${o.tipo}${o.quien?" · "+o.quien:""} · ${fecha(o.fecha)} · ${resumen(o)}.`+(extra||"");
+  $("seTab").innerHTML=tablaRes(o,true);$("seDown").onclick=()=>bajarRes(o);
+  show("vSoloEnd");window.scrollTo(0,0);
+}
+$("bLast").onclick=()=>{const o=ls.get("rosco_ultimo");if(o)verRes(o);};
+$("seCode").onclick=()=>{show("vCover");$("codeIn").value="";$("codeIn").focus();};
+if(ls.get("rosco_ultimo")&&!PROFE)$("lastBox").classList.remove("hidden");
+$("bCsv").onclick=()=>{
+  const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"',s=sorted();
+  const head=["Puesto","Equipo","Miembros","Aciertos","Fallos","Sin responder",...W.map(w=>w[0]+" ("+w[3][0]+")")];
+  const rows=s.map((t,p)=>[p+1,t.name,t.mem.join(", "),cnt(t.st,"o"),cnt(t.st,"k"),cnt(t.st,"p"),...W.map((w,i)=>{const a=R[t.i]&&R[t.i].ans&&R[t.i].ans[i];return t.st[i]=="o"?"✓ "+a:t.st[i]=="k"?"✗ "+a:""})]);
+  descargar(`rosco-emociones-sala-${CODE}.csv`,"\ufeff"+[head,...rows].map(r=>r.map(q).join(";")).join("\r\n"),"text/csv");
+};
+
+/* ================= INDIVIDUAL ================= */
+let SO=null,soTick=null;
+function soStart(){
+  if(!$("S0"))buildRing($("wrapS"),"S");
+  SO={st:"p".repeat(N),ans:Array(N).fill(""),cur:0,t0:Date.now()};$("soWho").value=ls.get("rosco_nombre")||"";
+  const b=ls.get("rosco_mejor");$("soBest").textContent=b?`Tu mejor marca en este iPad: ${b.o} aciertos (${fmt(b.ms)}).`:"";
+  $("soFb").textContent="";show("vSolo");soDraw();$("soAns").focus();
+  clearInterval(soTick);soTick=setInterval(()=>{$("soClock").textContent=fmt(Date.now()-SO.t0)},500);
+}
+function soNext(){for(let k=1;k<=N;k++){const j=(SO.cur+k)%N;if(SO.st[j]=="p"){SO.cur=j;return true}}return false;}
+function soDraw(){
+  W.forEach((x,i)=>{$("S"+i).className="l"+(SO.st[i]!="p"?" "+SO.st[i]:"")+(i==SO.cur&&SO.st[i]=="p"?" cur":"")});
+  $("soTag").textContent=W[SO.cur][1];$("soClue").textContent=W[SO.cur][2];
+  $("soO").textContent=cnt(SO.st,"o");$("soK").textContent=cnt(SO.st,"k");$("soP").textContent=cnt(SO.st,"p");
+}
+function soAnswer(pass){
+  if(pass){$("soFb").textContent="Pasapalabra";$("soFb").style.color="var(--njo)";soNext();soDraw();$("soAns").value="";$("soAns").focus();return}
+  const raw=$("soAns").value.trim(),v=norm(raw);if(!v){$("soAns").focus();return}
+  const ok=W[SO.cur][3].some(a=>norm(a)==v);SO.st=SO.st.slice(0,SO.cur)+(ok?"o":"k")+SO.st.slice(SO.cur+1);SO.ans[SO.cur]=raw;
+  $("soFb").textContent=ok?"¡Correcto!":"¡Fallo!";$("soFb").style.color=ok?"var(--vdo)":"var(--ko)";$("soAns").value="";
+  if(!soNext())return soEnd();soDraw();$("soAns").focus();
+}
+function soEnd(){
+  clearInterval(soTick);const ms=Date.now()-SO.t0,o=cnt(SO.st,"o"),k=cnt(SO.st,"k"),pe=cnt(SO.st,"p");
+  const b=ls.get("rosco_mejor"),rec=!b||o>b.o||(o==b.o&&ms<b.ms);if(rec&&o>0)ls.set("rosco_mejor",{o,ms});
+  const who=$("soWho").value.trim();ls.set("rosco_nombre",who);
+  const r={tipo:"A mi ritmo",quien:who,fecha:Date.now(),st:SO.st,ans:SO.ans,ms};saveLast(r);
+  verRes(r,(rec&&o>0&&b?" ¡Nueva mejor marca!":"")+" Repasa las que no sabías y vuelve a intentarlo cuando quieras.");
+}
+$("soOk").onclick=()=>soAnswer(false);$("soPass").onclick=()=>soAnswer(true);
+$("soAns").addEventListener("keydown",e=>{if(e.key=="Enter")soAnswer(false)});
+$("soStop").onclick=()=>{if($("soStop").dataset.c){delete $("soStop").dataset.c;$("soStop").textContent="Terminar y ver respuestas";return soEnd()}$("soStop").dataset.c=1;$("soStop").textContent="¿Seguro? Pulsa otra vez";setTimeout(()=>{delete $("soStop").dataset.c;$("soStop").textContent="Terminar y ver respuestas"},3000);};
+$("seAgain").onclick=soStart;
+$("bSolo").onclick=soStart;
+$("bSoloInfo").onclick=()=>{const u=location.href.replace(/[#?].*$/,"");msg("Cada uno a su ritmo","Los alumnos abren esta dirección en su iPad y pulsan «🎯 Jugar a mi ritmo». No hace falta código ni sala: juegan sin tiempo, ven sus respuestas al terminar y pueden repetir cuantas veces quieran.",`<p class="link">${esc(u)}</p><div class="row" style="justify-content:center;margin-top:10px"><button class="nj" onclick="soStart()">Probarlo aquí</button><button class="gh" onclick="show('vCover')">← Volver</button></div>`);};
+
 /* ================= EQUIPOS ================= */
 let me=null,dirty=false,tickS=null,pollS=null;
 const KEY=()=>"rosco_eq_"+G.id;
@@ -582,13 +684,16 @@ $("pickG").onclick=async e=>{
 };
 function goMem(){show("vMem");$("memTitle").textContent=DEF[me.team];$("memTitle").style.color=COL[me.team];drawMem();}
 function drawMem(){
+  {const n=me.mem.length,p=PER();$("memCnt").textContent=G&&G.per?`(${n} de ${p})`:"";$("memIn").disabled=n>=p;$("memAdd").disabled=n>=p;$("memIn").placeholder=n>=p?"Equipo completo":"Tu nombre y primer apellido";if(n<p)$("memErr").textContent="";}
   $("memList").innerHTML=me.mem.map((m,i)=>`<span>${esc(m)}<button data-i="${i}" aria-label="Quitar ${esc(m)}">×</button></span>`).join("")||'<span style="background:#e6eff3;color:var(--mut)">Todavía nadie</span>';
 }
 $("memList").onclick=e=>{const b=e.target.closest("button");if(b){me.mem.splice(+b.dataset.i,1);save();drawMem();}};
-function addMem(){const v=$("memIn").value.trim();if(v&&!me.mem.includes(v)){me.mem.push(v);save();drawMem();}$("memIn").value="";$("memIn").focus();}
+const PER=()=>(G&&G.per)||6;
+function addMem(){const v=$("memIn").value.trim();if(me.mem.length>=PER()){$("memErr").textContent=`El equipo ya tiene ${PER()} ${PER()==1?"miembro":"miembros"}.`;$("memIn").value="";return}if(v&&!me.mem.includes(v)){me.mem.push(v);save();drawMem();}$("memIn").value="";$("memIn").focus();}
 $("memAdd").onclick=addMem;$("memIn").addEventListener("keydown",e=>{if(e.key=="Enter")addMem()});
 $("memBack").onclick=async()=>{const t=me.team;me=null;try{localStorage.removeItem(KEY())}catch(e){}try{await apiPost({action:"leave",id:G.id,team:t});}catch(e){}drawPick();};
-$("memOk").onclick=()=>{if(!me.mem.length){$("memErr").textContent="Apuntad al menos un nombre.";return}$("memErr").textContent="";me.ready=true;save();route();};
+$("memOk").onclick=()=>{if(!me.mem.length){$("memErr").textContent="Apuntad al menos un nombre.";return}
+  if(G.per&&me.mem.length<G.per&&!$("memOk").dataset.c){$("memOk").dataset.c=1;$("memErr").textContent=`Sois ${me.mem.length} de ${G.per}. Si falta alguien, añadidlo; si no, pulsad otra vez.`;return}delete $("memOk").dataset.c;$("memErr").textContent="";me.ready=true;save();route();};
 
 function setSt(i,c){me.st=me.st.slice(0,i)+c+me.st.slice(i+1);}
 function nextPending(){for(let k=1;k<=N;k++){const j=(me.cur+k)%N;if(me.st[j]=="p"){me.cur=j;return true}}return false;}
@@ -624,6 +729,7 @@ function review(){
   $("revP").textContent=`${DEF[me.team]}: ${o} aciertos, ${cnt(me.st,"k")} ${cnt(me.st,"k")==1?"fallo":"fallos"}, ${cnt(me.st,"p")} sin responder.`+(fin?" Ya no se puede responder. Aquí tenéis vuestras respuestas y las correctas.":" Cuando acabe el tiempo veréis aquí las respuestas correctas.");
   $("revTab").innerHTML=`<tr><th></th><th>Definición</th><th>Vuestra respuesta</th>${fin?"<th>Correcta</th>":""}</tr>`+W.map((w,i)=>{const s=me.st[i];return `<tr><td class="lt">${w[0]}</td><td>${esc(w[2])}</td><td class="${s=="o"?"ok":s=="k"?"ko":"pe"}">${s=="p"?"—":(s=="o"?"✓ ":"✗ ")+esc(me.ans[i])}</td>${fin?`<td><b>${esc(w[3][0])}</b></td>`:""}</tr>`}).join("");
   sideRank($("rkSide2"),me.team);
+  if(fin){const r={tipo:"Por equipos",quien:DEF[me.team]+(me.mem.length?" ("+me.mem.join(", ")+")":""),fecha:G.end||Date.now(),st:me.st,ans:me.ans};const prev=ls.get("rosco_ultimo");if(!prev||prev.fecha!==r.fecha||prev.st!==r.st)saveLast(r);$("revDown").classList.remove("hidden");$("revDown").onclick=()=>bajarRes(r);}else $("revDown").classList.add("hidden");
   if(cur()!="vRev"){show("vRev");window.scrollTo(0,0);}
 }
 
